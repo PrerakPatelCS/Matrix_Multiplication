@@ -1,7 +1,9 @@
 #include <iostream>
 #include <chrono>
 #include <unistd.h>
-#include "generateTestCases.h"
+#include "generateTestCases/generateTestCases.h"
+#include "generateAnswers/generateAnswers.h"
+#include "generateResults/generateResults.h"
 
 
 
@@ -20,8 +22,9 @@
 
 */
 int main(int argc, char* argv[]){
-    generateTestCase("testcase", 987, 100, 10, 5);
-
+    generateTestCase("testcase", 987, 100, 5, 5, 999, 100, 5, 5);
+    generateAllAnswers(); 
+    getNaiveResults();
 
     return EXIT_SUCCESS;
 
