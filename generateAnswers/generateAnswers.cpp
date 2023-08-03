@@ -8,14 +8,12 @@ const string TESTDIR = "testcases";
 /**
 
 */
-vector<Matrix> readMatricesFromFile(const string& fileName){
+vector<Matrix> readMatricesFromFile(const string& filePath){
     // opens file and allows read
-    string filePath = TESTDIR + "/" + fileName;
-    cout << filePath << endl;
     ifstream file(filePath);
 
     if(!file.is_open()){
-        cerr << "Error : Failed to open the file " << fileName << endl;
+        cerr << "Error : Failed to open the file " << filePath << endl;
         return {};
     }
 
@@ -56,7 +54,7 @@ unordered_set<string> getFileNames(const string& directory){
 
 */
 void generateAnswer(const string& testcase){
-    vector<Matrix> matrices = readMatricesFromFile(testcase);
+    vector<Matrix> matrices = readMatricesFromFile(TESTDIR + "/" + testcase);
     Matrix matrix1 = matrices[0];
     Matrix matrix2 = matrices[1];
     Matrix result = naive(matrix1, matrix2);
@@ -76,7 +74,6 @@ void writeMatrixToFile(const Matrix& matrix, const string& fileName){
     if(file){
         file << matrixToString(matrix) << endl;
         file.close();
-        cout << "Answer written " << fileName << endl;
     }
     else{
         cerr << "Error opening file for writing." << endl;
