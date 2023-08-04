@@ -1,3 +1,7 @@
+#ifndef GENERATETESTCASES_H
+#define GENERATETESTCASES_H
+
+
 #include <iostream>
 #include <vector>
 #include <random>
@@ -33,3 +37,6 @@ string getUniqueFileName(const string& baseName);
 void writeMatrixToFile(const vector<vector<int>>& matrix, const string& baseName);
 void generateTestCase(const string& baseName, int seed, int range, int n, int m, int seed2, int range2, int n2, int m2);
 string matrixToString(const vector<vector<int>>& matrix);
+
+
+#endif

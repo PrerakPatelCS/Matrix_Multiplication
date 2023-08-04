@@ -1,3 +1,7 @@
+#ifndef GENERATERESULTS_H
+#define GENERATERESULTS_H
+
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,6 +13,7 @@
 #include <algorithm>
 #include "../generateTestCases/generateTestCases.h"
 #include "../generateAnswers/generateAnswers.h"
+#include "../algorithms/dacThread/dacThread.h"
 
 
 using std::vector;
@@ -42,9 +47,14 @@ struct TestResult{
 namespace fs = std::filesystem;
 
 
-void getNaiveResults();
+void getAllAlgorithmResults();
+void getAlgorithmResults(int algorithm);
 vector<int> checkCorrectness(Matrix experiment, Matrix actual);
-void writeResultsToFile(vector<TestResult>& results, const string& algorithm);
+void writeResultsToFile(vector<TestResult>& results, int algorithm);
 double getAverageTime(int algorithm, vector<Matrix>& matrices, int n);
-void runAlgorithm(int algorithm, vector<Matrix>& matrices);
+Matrix runAlgorithm(int algorithm, vector<Matrix>& matrices);
+string getAlgorithmName(int algorithm);
+
+
+#endif
 

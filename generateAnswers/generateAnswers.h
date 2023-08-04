@@ -1,3 +1,6 @@
+#ifndef GENERATEANSWERS_H
+#define GENERATEANSWERS_H
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -33,3 +36,4 @@ string matrixToString(const Matrix& matrix);
 void writeMatrixToFile(const Matrix& matrix, const string& fileName);
 void generateAllAnswers();
 
+#endif

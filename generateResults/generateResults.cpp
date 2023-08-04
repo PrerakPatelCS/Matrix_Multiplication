@@ -4,17 +4,30 @@
 const string TESTDIR = "testcases";
 const string ANSDIR = "answers";
 const string RESULTSDIR = "results";
+const string ALGORITHMSDIR = "algorithms";
 const int RUNS = 10;
-const int NAIVE = 1;
-
+const string UNITSTRING = "(micro)";
 using TIMEUNIT = duration<double, std::micro>;
+
+
+/**
+
+*/
+void getAllAlgorithmResults(){
+    int algorithms = 0;
+    for(const auto& entry : fs::directory_iterator(ALGORITHMSDIR)){
+        if(fs::is_directory(entry)){
+            getAlgorithmResults(++algorithms);
+        }
+    }
+}
 
 
 /**
     Each testcase will be ran by this algorithm
     each algorithm in algorithms will run a 
 */
-void getNaiveResults(){
+void getAlgorithmResults(int algorithm){
     unordered_set<string> testcases = getFileNames(TESTDIR);
     unordered_set<string> answers = getFileNames(ANSDIR);
     vector<TestResult> results;
@@ -22,13 +35,12 @@ void getNaiveResults(){
     for(const auto& testcase : testcases){
         vector<Matrix> matrices = readMatricesFromFile(TESTDIR + "/" + testcase);
         TestResult result;
-        
-	double duration = getAverageTime(NAIVE, matrices, RUNS);
-        Matrix naiveSol = naive(matrices[0], matrices[1]);
+        double duration = getAverageTime(algorithm, matrices, RUNS);
+        Matrix solution = runAlgorithm(algorithm, matrices);
         int num = extractNumberFromFileName(testcase);
         string answerFileName = "answer_" + to_string(num) + ".txt";
         vector<Matrix> answerMatrix = readMatricesFromFile(ANSDIR + "/" + answerFileName);
-        vector<int> acuracy = checkCorrectness(naiveSol, answerMatrix[0]);
+        vector<int> acuracy = checkCorrectness(solution, answerMatrix[0]);
 
         result.testcase = num;
         result.score = acuracy[0];
@@ -36,7 +48,7 @@ void getNaiveResults(){
         result.duration = duration;
         results.push_back(result);
     }
-    writeResultsToFile(results, "naive");
+    writeResultsToFile(results, algorithm);
 }
 
 
@@ -60,13 +72,14 @@ double getAverageTime(int algorithm, vector<Matrix>& matrices, int n){
 /**
 
 */
-void runAlgorithm(int algorithm, vector<Matrix>& matrices){
+Matrix runAlgorithm(int algorithm, vector<Matrix>& matrices){
+    Matrix result;
     switch(algorithm){
         case 1:
-            naive(matrices[0], matrices[1]);
+            result = naive(matrices[0], matrices[1]);
             break;
         case 2:
-            naive(matrices[0], matrices[1]);
+            result = divideAndConquer(matrices[0], matrices[1]);
             break;
         case 3:
             naive(matrices[0], matrices[1]);
@@ -75,6 +88,30 @@ void runAlgorithm(int algorithm, vector<Matrix>& matrices){
             naive(matrices[0], matrices[1]);
             break;
     }
+    return result;
+}
+
+
+/**
+
+*/
+string getAlgorithmName(int algorithm){
+    string name;
+    switch(algorithm){
+        case 1:
+            name = "naive";
+            break;
+        case 2:
+            name = "divideAndConquer";
+            break;
+        case 3:
+            name = "naive";
+            break;
+        case 4:
+            name = "naive";
+            break;
+    }
+    return name;
 }
 
 
@@ -119,13 +156,13 @@ vector<int> checkCorrectness(Matrix experiment, Matrix actual){
 /**
 
 */
-void writeResultsToFile(vector<TestResult>& results, const string& algorithm){
-    string filePath = RESULTSDIR + "/" + algorithm;
+void writeResultsToFile(vector<TestResult>& results, int algorithm){
+    string filePath = RESULTSDIR + "/" + getAlgorithmName(algorithm);
     std::sort(results.begin(), results.end());
     
     ofstream file(filePath);
     if(file){
-        file << "Testcase" << "\t" << "Time(micro)" << "\t" << "Accuracy" << endl;
+        file << "Testcase" << "\t" << "Time" << UNITSTRING << "\t" << "Accuracy" << endl;
         for(auto& result : results){
             file << "\t" << result.testcase << "\t" << fixed << setprecision(4) << result.duration << "\t\t" << result.score << "/" << result.maxScore << endl;
         }
@@ -134,3 +171,5 @@ void writeResultsToFile(vector<TestResult>& results, const string& algorithm){
         cerr << "Error opening file for writing." << endl;
     }
 }
+
+
