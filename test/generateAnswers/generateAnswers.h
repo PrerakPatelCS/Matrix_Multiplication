@@ -8,7 +8,8 @@
 #include <sstream>
 #include <filesystem>
 #include <unordered_set>
-#include "../../include/naive.h"
+#include "../../include/Naive.hpp"
+#include "../../include/MatrixMultiplication.hpp"
 #include "../generateTestCases/generateTestCases.h"
 
 

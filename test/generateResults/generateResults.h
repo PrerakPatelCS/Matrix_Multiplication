@@ -13,7 +13,9 @@
 #include <algorithm>
 #include "../generateTestCases/generateTestCases.h"
 #include "../generateAnswers/generateAnswers.h"
-#include "../../include/dacThread.h"
+#include "../../include/Naive.hpp"
+#include "../../include/MatrixMultiplication.hpp"
+
 
 
 using namespace std;
@@ -34,12 +36,11 @@ struct TestResult{
 
 
 void getAllAlgorithmResults();
-void getAlgorithmResults(int algorithm);
+void getAlgorithmResults(MatrixMultiplication* algorithm);
 vector<int> checkCorrectness(Matrix experiment, Matrix actual);
-void writeResultsToFile(vector<TestResult>& results, int algorithm);
-double getAverageTime(int algorithm, vector<Matrix>& matrices, int n);
-Matrix runAlgorithm(int algorithm, vector<Matrix>& matrices);
-string getAlgorithmName(int algorithm);
+void writeResultsToFile(vector<TestResult>& results, MatrixMultiplication* algorithm);
+double getAverageTime(MatrixMultiplication* algorithm, vector<Matrix>& matrices);
+string getAlgorithmName(MatrixMultiplication* algorithm);
 
 
 #endif

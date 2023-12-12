@@ -1,13 +1,16 @@
-#include "include/naive.h"
+#include "include/Naive.hpp"
 
+Naive::Naive(){
 
-Matrix naive(Matrix& matrix1, Matrix& matrix2){
+}
+
+Matrix Naive::MatrixMult(Matrix& matrix1, Matrix& matrix2) {
     int rows1 = matrix1.size();
     int cols1 = matrix1[0].size();
     int rows2 = matrix2.size();
     int cols2 = matrix2[0].size();
 
-    if(cols2 != rows2){
+    if(cols1 != rows2){
         throw runtime_error("Matrix dimensions are incompatible");
     }
 
@@ -23,3 +26,4 @@ Matrix naive(Matrix& matrix1, Matrix& matrix2){
 
     return result;
 }
+

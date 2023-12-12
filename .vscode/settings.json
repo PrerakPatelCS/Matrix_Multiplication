@@ -1,3 +1,9 @@
 {
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "client": "cpp",
+        "vector": "cpp",
+        "filesystem": "cpp",
+        "unordered_set": "cpp"
+    }
 }

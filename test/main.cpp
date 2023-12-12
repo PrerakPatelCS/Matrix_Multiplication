@@ -4,9 +4,8 @@
 #include "generateTestCases/generateTestCases.h"
 #include "generateAnswers/generateAnswers.h"
 #include "generateResults/generateResults.h"
-#include "../include/naive.h"
-
-#include "../include/dacThread.h"
+#include "../include/Naive.hpp"
+#include "../include/MatrixMultiplication.hpp"
 
 
 
@@ -16,8 +15,8 @@
 
 */
 int main(int argc, char* argv[]){
-    generateTestCase("testcase", 987, 100, 10, 10, 999, 100, 10, 10);
+    //generateTestCase("testcase", 987, 100, 10, 10, 999, 100, 10, 10);
     //generateAllAnswers(); 
-    //getAllAlgorithmResults();
+    getAllAlgorithmResults();
     return EXIT_SUCCESS;
 }

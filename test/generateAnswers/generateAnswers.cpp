@@ -3,7 +3,7 @@
 
 const string ANSDIR = "test/answers";
 const string TESTDIR = "test/testcases";
-
+MatrixMultiplication* generateAns = new Naive();
 
 /**
  * Generates the matrices from the file. Matrices are stored in the file like
@@ -71,7 +71,7 @@ void generateAnswer(const string& testcase){
     vector<Matrix> matrices = readMatricesFromFile(TESTDIR + "/" + testcase);
     Matrix matrix1 = matrices[0];
     Matrix matrix2 = matrices[1];
-    Matrix result = naive(matrix1, matrix2);
+    Matrix result = generateAns->MatrixMult(matrix1, matrix2);
     int num = extractNumberFromFileName(testcase);
     string fileName = "answer_" + to_string(num) + ".txt";
     writeMatrixToFile(result, fileName);

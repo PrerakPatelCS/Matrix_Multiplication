@@ -1,6 +1,5 @@
 #include "generateResults.h"
 
-
 const string TESTDIR = "test/testcases";
 const string ANSDIR = "test/answers";
 const string RESULTSDIR = "test/results";
@@ -8,15 +7,19 @@ const string ALGORITHMSDIR = "src";
 const int RUNS = 10;
 const string UNITSTRING = "(micro)";
 using TIMEUNIT = duration<double, std::micro>;
-
+unordered_set<string> testcases;
+unordered_set<string> answers;
 
 /**
  * Go through the algorithms directory and generates the results of each algorithm
 */
 void getAllAlgorithmResults(){
-    int algorithms = 0;
-    for(const auto& entry : fs::directory_iterator(ALGORITHMSDIR)){
-        getAlgorithmResults(++algorithms);
+    vector<MatrixMultiplication*> algorithms;
+    // add algorithms here
+    algorithms.push_back(new Naive());
+
+    for(MatrixMultiplication* algorithm : algorithms){
+        getAlgorithmResults(algorithm);
     }
 }
 
@@ -26,16 +29,20 @@ void getAllAlgorithmResults(){
  * record the results and write it to the file associated with it
  * @param int algorithm
 */
-void getAlgorithmResults(int algorithm){
-    unordered_set<string> testcases = getFileNames(TESTDIR);
-    unordered_set<string> answers = getFileNames(ANSDIR);
+void getAlgorithmResults(MatrixMultiplication* algorithm){
+    // only get the files once
+    if(testcases.size() == 0)
+        testcases = getFileNames(TESTDIR);
+    if(answers.size() == 0)
+        answers = getFileNames(ANSDIR);
+    
     vector<TestResult> results;
 
     for(const auto& testcase : testcases){
         vector<Matrix> matrices = readMatricesFromFile(TESTDIR + "/" + testcase);
         TestResult result;
-        double duration = getAverageTime(algorithm, matrices, RUNS);
-        Matrix solution = runAlgorithm(algorithm, matrices);
+        double duration = getAverageTime(algorithm, matrices);
+        Matrix solution = algorithm->MatrixMult(matrices[0], matrices[1]);
         int num = extractNumberFromFileName(testcase);
         string answerFileName = "answer_" + to_string(num) + ".txt";
         vector<Matrix> answerMatrix = readMatricesFromFile(ANSDIR + "/" + answerFileName);
@@ -58,43 +65,19 @@ void getAlgorithmResults(int algorithm){
  * @param int n - number of runs
  * @return double - time to run
 */
-double getAverageTime(int algorithm, vector<Matrix>& matrices, int n){
+double getAverageTime(MatrixMultiplication* algorithm, vector<Matrix>& matrices){
     double average = 0;
-    for(int i = 0; i < n; i++){
+    for(int i = 0; i < RUNS; i++){
          // Initial time point
         auto start = high_resolution_clock::now();
-        runAlgorithm(algorithm, matrices);
+        algorithm->MatrixMult(matrices[0], matrices[1]);
         // Subtracting 2 timepoints we get a duration
         TIMEUNIT duration = high_resolution_clock::now() - start;
         average += duration.count();
     }
-    return average / n;
+    return average / RUNS;
 }
 
-
-/**
- * @param int algorithm
- * @param vector matrices
- * @return Matrix result
-*/
-Matrix runAlgorithm(int algorithm, vector<Matrix>& matrices){
-    Matrix result;
-    switch(algorithm){
-        case 1:
-            result = naive(matrices[0], matrices[1]);
-            break;
-        case 2:
-            result = divideAndConquer(matrices[0], matrices[1]);
-            break;
-        case 3:
-            naive(matrices[0], matrices[1]);
-            break;
-        case 4:
-            naive(matrices[0], matrices[1]);
-            break;
-    }
-    return result;
-}
 
 
 /**
@@ -102,22 +85,12 @@ Matrix runAlgorithm(int algorithm, vector<Matrix>& matrices){
  * @param int algorithm
  * @return string name
 */
-string getAlgorithmName(int algorithm){
+string getAlgorithmName(MatrixMultiplication* algorithm){
     string name;
-    switch(algorithm){
-        case 1:
-            name = "naive";
-            break;
-        case 2:
-            name = "divideAndConquer";
-            break;
-        case 3:
-            name = "naive";
-            break;
-        case 4:
-            name = "naive";
-            break;
+    if(dynamic_cast<Naive*>(algorithm)){
+        return "Naive";
     }
+
     return name;
 }
 
@@ -169,7 +142,7 @@ vector<int> checkCorrectness(Matrix experiment, Matrix actual){
  * @param vector results
  * @param int algorithm
 */
-void writeResultsToFile(vector<TestResult>& results, int algorithm){
+void writeResultsToFile(vector<TestResult>& results, MatrixMultiplication* algorithm){
     string filePath = RESULTSDIR + "/" + getAlgorithmName(algorithm);
     sort(results.begin(), results.end());
     
@@ -177,7 +150,9 @@ void writeResultsToFile(vector<TestResult>& results, int algorithm){
     if(file){
         file << "Testcase" << "\t" << "Time" << UNITSTRING << "\t" << "Accuracy" << endl;
         for(auto& result : results){
-            file << "\t" << result.testcase << "\t" << fixed << setprecision(4) << result.duration << "\t\t" << result.score << "/" << result.maxScore << endl;
+            file << "\t" << result.testcase << "\t" 
+            << fixed << setprecision(4) << result.duration 
+            << "\t\t" << result.score << "/" << result.maxScore << endl;
         }
     }
     else{
