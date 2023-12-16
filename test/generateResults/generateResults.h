@@ -13,8 +13,7 @@
 #include <algorithm>
 #include "../generateTestCases/generateTestCases.h"
 #include "../generateAnswers/generateAnswers.h"
-#include "../../include/Naive.hpp"
-#include "../../include/MatrixMultiplication.hpp"
+#include "../../include/AllHeaders.hpp"
 
 
 

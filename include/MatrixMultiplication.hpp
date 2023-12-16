@@ -5,7 +5,6 @@ using namespace std;
 using Matrix = vector<vector<int>>;
 
 class MatrixMultiplication {
-
     public:
         virtual Matrix MatrixMult(
             Matrix& matrix1, Matrix& matrix2

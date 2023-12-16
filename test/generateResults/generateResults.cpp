@@ -17,7 +17,8 @@ void getAllAlgorithmResults(){
     vector<MatrixMultiplication*> algorithms;
     // add algorithms here
     algorithms.push_back(new Naive());
-
+    algorithms.push_back(new Strassen7());
+    algorithms.push_back(new DivideAndConquer());
     for(MatrixMultiplication* algorithm : algorithms){
         getAlgorithmResults(algorithm);
     }
@@ -88,9 +89,14 @@ double getAverageTime(MatrixMultiplication* algorithm, vector<Matrix>& matrices)
 string getAlgorithmName(MatrixMultiplication* algorithm){
     string name;
     if(dynamic_cast<Naive*>(algorithm)){
-        return "Naive";
+        name = "Naive";
     }
-
+    else if(dynamic_cast<Strassen7*>(algorithm)){
+        name = "Strassen7";
+    }
+    else if(dynamic_cast<DivideAndConquer*>(algorithm)){
+        name = "DivideAndConquer";
+    }
     return name;
 }
 
